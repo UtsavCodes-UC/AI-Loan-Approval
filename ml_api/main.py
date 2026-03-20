@@ -2,8 +2,17 @@ from fastapi import FastAPI
 import pandas as pd
 from schemas import LoanRequest
 from model_loader import models, scaler, encoder, feature_columns
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title='CreditWise ML API')
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/')
 def home():

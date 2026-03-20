@@ -333,7 +333,7 @@ function Predict() {
                                 {showConfetti && (
                                     <Confetti
                                         width={width}
-                                        height={height + 700}
+                                        height={height + 300}
                                         numberOfPieces={300}
                                         initialVelocityY={10}
                                         recycle={false}
