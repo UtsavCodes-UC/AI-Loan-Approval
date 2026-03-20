@@ -52,7 +52,7 @@ exports.predictLoan = async (req, res) => {
       model_used: result.model_used
     });
 
-    res.json(savedPrediction);
+    res.json(result);
   }
   catch (error) {
     res.status(500).json({
