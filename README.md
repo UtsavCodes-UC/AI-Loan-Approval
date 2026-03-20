@@ -6,9 +6,9 @@ An end-to-end **AI-powered fintech platform** that predicts loan approvals using
 
 ## 🚀 Live Demo
 
-🌐 LIVE Website: https://ai-loan-approval-gamma.vercel.app/
-⚙️ Backend API: https://login-backend-8fbg.onrender.com
-🧠 ML API: https://loan-ml-api-9e06.onrender.com
+🌐 LIVE Website: https://ai-loan-approval-gamma.vercel.app  
+⚙️ Backend API: https://login-backend-8fbg.onrender.com  
+🧠 ML API: https://loan-ml-api-9e06.onrender.com   
 
 > ⚠️ Note: First request may take a few seconds due to free-tier cold start.
 
