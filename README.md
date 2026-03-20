@@ -213,12 +213,6 @@ REACT_APP_API_URL=your_backend_url
 
 ---
 
-## 🏆 Resume Highlight
-
-> Developed and deployed a full-stack AI-powered loan approval system using MERN stack and FastAPI, featuring real-time predictions, model comparison dashboards, and user analytics.
-
----
-
 ## 👨‍💻 Author
 
 **Utsav Patel**   
