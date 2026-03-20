@@ -2,14 +2,32 @@ const axios = require('axios');
 const Prediction = require('../models/Prediction.js')
 
 const callFastAPI = async (data) => {
-  try {
-    return await axios.post(process.env.FASTAPI_URL, data, {timeout: 10000});
-  } catch (err) {
-    console.log("⚠️ FastAPI cold start detected. Retrying in 5 seconds...");
+  const MAX_RETRIES = 3;
 
-    await new Promise((res) => setTimeout(res, 5000));
+  for (let i = 0; i < MAX_RETRIES; i++) {
+    try {
+      console.log(`Attempt ${i + 1} to call FastAPI`);
 
-    return await axios.post(process.env.FASTAPI_URL, data);
+      const response = await axios.post(
+        process.env.FASTAPI_URL,
+        data,
+        { timeout: 15000 }
+      );
+
+      return response;
+
+    } catch (err) {
+      console.log(`Attempt ${i + 1} failed`);
+
+      if (i === MAX_RETRIES - 1) {
+        throw err;
+      }
+
+      const delay = (i + 1) * 5000;
+      console.log(`Waiting ${delay / 1000}s before retry...`);
+
+      await new Promise((res) => setTimeout(res, delay));
+    }
   }
 };
 
