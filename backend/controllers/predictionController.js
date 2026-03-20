@@ -6,25 +6,31 @@ const callFastAPI = async (data) => {
 
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
-      console.log(`Attempt ${i + 1} to call FastAPI`);
+      console.log(`🔁 Attempt ${i + 1}`);
 
       const response = await axios.post(
         process.env.FASTAPI_URL,
         data,
-        { timeout: 15000 }
+        {
+          timeout: 30000,
+        }
       );
 
       return response;
 
     } catch (err) {
-      console.log(`Attempt ${i + 1} failed`);
+      console.log(`❌ Attempt ${i + 1} failed`);
+
+      if (err.code === "ECONNABORTED") {
+        console.log("⏳ Request timed out (cold start)");
+      }
 
       if (i === MAX_RETRIES - 1) {
         throw err;
       }
 
-      const delay = (i + 1) * 5000;
-      console.log(`Waiting ${delay / 1000}s before retry...`);
+      const delay = (i + 1) * 7000;
+      console.log(`⏳ Waiting ${delay / 1000}s...`);
 
       await new Promise((res) => setTimeout(res, delay));
     }
@@ -32,25 +38,27 @@ const callFastAPI = async (data) => {
 };
 
 exports.predictLoan = async (req, res) => {
-    try {
-        const inputData = req.body;
-        const response = await callFastAPI(inputData);
-        const result = response.data;
+  try {
+    const inputData = req.body;
+    const response = await callFastAPI(inputData);
+    const result = response.data;
 
-        const savedPrediction = await Prediction.create({
-            user_id: req.user.id,
-            input_data: inputData,
-            prediction: result.prediction,
-            probability: result.approval_probability,
-            risk_level: result.risk_level,
-            model_used: result.model_used
-        });
+    const savedPrediction = await Prediction.create({
+      user_id: req.user.id,
+      input_data: inputData,
+      prediction: result.prediction,
+      probability: result.approval_probability,
+      risk_level: result.risk_level,
+      model_used: result.model_used
+    });
 
-        res.json(savedPrediction);
-    }
-    catch(error) {
-        res.status(500).json({message: "Prediction FAILED!"});
-    }
+    res.json(savedPrediction);
+  }
+  catch (error) {
+    res.status(500).json({
+      message: "Model is waking up. Please try again in a few seconds."
+    });
+  }
 };
 
 exports.getPredictions = async (req, res) => {
