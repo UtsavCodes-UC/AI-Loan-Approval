@@ -16,13 +16,6 @@ function Analytics() {
 
   const COLORS = ["#00C49F", "#FF4D4F"];
 
-  const purposeData = [
-    { name: "Home", value: 45 },
-    { name: "Education", value: 20 },
-    { name: "Personal", value: 25 },
-    { name: "Business", value: 10 }
-  ];
-
   return (
     <div className="flex">
 
