@@ -221,7 +221,7 @@ REACT_APP_API_URL=your_backend_url
 
 ## 👨‍💻 Author
 
-**Utsav Patel**
+**Utsav Patel**   
 GitHub: https://github.com/UtsavCodes-UC
 
 ---
