@@ -1,15 +1,22 @@
 const axios = require('axios');
 const Prediction = require('../models/Prediction.js')
 
+const callFastAPI = async (data) => {
+  try {
+    return await axios.post(process.env.FASTAPI_URL, data, {timeout: 10000});
+  } catch (err) {
+    console.log("⚠️ FastAPI cold start detected. Retrying in 5 seconds...");
+
+    await new Promise((res) => setTimeout(res, 5000));
+
+    return await axios.post(process.env.FASTAPI_URL, data);
+  }
+};
+
 exports.predictLoan = async (req, res) => {
     try {
         const inputData = req.body;
-
-        const response = await axios.post(
-            process.env.FASTAPI_URL,
-            inputData
-        );
-
+        const response = await callFastAPI(inputData);
         const result = response.data;
 
         const savedPrediction = await Prediction.create({
@@ -21,7 +28,7 @@ exports.predictLoan = async (req, res) => {
             model_used: result.model_used
         });
 
-        res.json(result);
+        res.json(savedPrediction);
     }
     catch(error) {
         res.status(500).json({message: "Prediction FAILED!"});
