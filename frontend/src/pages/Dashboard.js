@@ -13,21 +13,26 @@ import {
 function Dashboard() {
 
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const fetchData = () => {
-        API.get("/predict/history")
-            .then(res => setData(res.data))
-            .catch(() => alert("Failed to load dashboard"));
+    const fetchData = async () => {
+        try {
+            const res = await API.get("/predict/history");
+            setData(res.data);
+        } catch {
+            alert("Failed to load dashboard");
+        }
+        setLoading(false);
     };
 
 
     const total = data.length;
-    console.log(data);
+    //console.log(data);
 
     const approved = data.filter(d => d.prediction === "Approved").length;
     const rejected = total - approved;
@@ -58,6 +63,33 @@ function Dashboard() {
     ];
 
     const COLORS = ["#00C49F", "#FF4D4F"];
+
+    if (loading) {
+        return (
+            <div className="flex">
+                <Sidebar />
+
+                <div className="ml-64 flex-1 bg-gray-50 min-h-screen">
+                    <Navbar />
+
+                    <div className="flex justify-center items-center h-[80vh]">
+
+                        <div className="flex flex-col items-center gap-4">
+
+                            <div className="animate-spin h-10 w-10 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+
+                            <p className="text-gray-600 text-lg">
+                                Loading dashboard...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        );
+    }
 
     if (data.length === 0) {
         return (
@@ -214,8 +246,8 @@ function Dashboard() {
                                             </td>
 
                                             <td className={`font-semibold ${item.prediction === "Approved"
-                                                    ? "text-green-600"
-                                                    : "text-red-600"
+                                                ? "text-green-600"
+                                                : "text-red-600"
                                                 }`}>
                                                 {item.prediction}
                                             </td>

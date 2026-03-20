@@ -12,6 +12,7 @@ function Predict() {
     const [result, setResult] = useState(null);
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { width, height } = useWindowSize();
     const isApproved = result?.prediction === "Approved";
@@ -117,7 +118,7 @@ function Predict() {
             setErrors(validationErrors);
             return;
         }
-
+        setLoading(true);
         setErrors({});
         setShowConfetti(false);
         const res = await API.post("/predict", {
@@ -126,6 +127,7 @@ function Predict() {
         });
 
         setResult(res.data);
+        setLoading(false);
     };
 
     return (
@@ -318,13 +320,20 @@ function Predict() {
 
                     <button
                         onClick={handleSubmit}
-                        disabled={!isFormValid}
-                        className={`mt-6 px-6 py-2 rounded transition ${isFormValid
-                            ? "bg-blue-600 hover:bg-blue-700 text-white"
-                            : "bg-gray-400 cursor-not-allowed text-white"
+                        disabled={!isFormValid || loading}
+                        className={`mt-6 px-6 py-2 rounded flex items-center justify-center gap-2 ${isFormValid && !loading
+                                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                : "bg-gray-400 cursor-not-allowed text-white"
                             }`}
                     >
-                        Predict
+                        {loading ? (
+                            <>
+                                <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                                Predicting...
+                            </>
+                        ) : (
+                            "Predict"
+                        )}
                     </button>
 
                     <div ref={resultRef}>

@@ -8,10 +8,14 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loadingGuest, setLoadingGuest] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     try {
       const res = await API.post("/auth/login", { email, password });
 
@@ -22,9 +26,12 @@ function Login() {
     } catch {
       alert("Invalid credentials");
     }
+    setLoading(false);
   };
 
-  const handleGuestLogin = async () => {
+  const handleGuestLogin = async (e) => {
+    e.preventDefault();
+    setLoadingGuest(true);
     try {
       const res = await API.post("/auth/login", {
         email: "guest@gmail.com",
@@ -37,12 +44,21 @@ function Login() {
     catch (error) {
       alert("Guest Login Failed")
     }
+    setLoadingGuest(false);
   }
 
   return (
     <div className="flex h-screen">
 
       <AuthHero />
+      {(loading || loadingGuest) && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow text-center">
+            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+            <p className="text-gray-600">Authenticating...</p>
+          </div>
+        </div>
+      )}
 
       <div className="flex w-full md:w-1/2 justify-center items-center bg-gray-100">
 
@@ -74,7 +90,7 @@ function Login() {
             onClick={handleLogin}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition duration-200"
           >
-            Login
+            {!loading ? "Login" : "Logging in...Please Wait"}
           </button>
 
           <div className="flex items-center my-4">
@@ -88,7 +104,7 @@ function Login() {
             className="w-full mt-4 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white py-2 rounded-lg transition"
           >
             <FaUser />
-            Login as Guest
+            {!loadingGuest ? "Login as Guest" : "Logging in...Please Wait"}
           </button>
 
           <div className="my-4 text-center text-gray-400 text-sm">
