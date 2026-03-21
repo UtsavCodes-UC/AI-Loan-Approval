@@ -18,6 +18,10 @@ app.add_middleware(
 def home():
     return {"message": "CreditWise Loan Approval API"}
 
+@app.get('/health')
+def health_check():
+    return {"status": "ok"}
+
 @app.post('/predict')
 def predict(data: LoanRequest):
     input_dict = data.dict()
