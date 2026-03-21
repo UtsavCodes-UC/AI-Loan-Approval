@@ -2,7 +2,7 @@ const axios = require('axios');
 const Prediction = require('../models/Prediction.js')
 
 const callFastAPI = async (data) => {
-  const MAX_RETRIES = 3;
+  const MAX_RETRIES = 10;
 
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
@@ -12,7 +12,7 @@ const callFastAPI = async (data) => {
         process.env.FASTAPI_URL,
         data,
         {
-          timeout: 30000,
+          timeout: 60000,
         }
       );
 
@@ -29,7 +29,7 @@ const callFastAPI = async (data) => {
         throw err;
       }
 
-      const delay = (i + 1) * 7000;
+      const delay = (i + 1) * 10000;
       console.log(`⏳ Waiting ${delay / 1000}s...`);
 
       await new Promise((res) => setTimeout(res, delay));
