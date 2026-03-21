@@ -194,7 +194,7 @@ function Predict() {
                         </div>
 
                         <div>
-                            <label>DTI Ratio</label>
+                            <label>DTI Ratio = ((Total Monthly Debt Payments ÷ Gross Monthly Income)) </label>
                             <input
                                 name="DTI_Ratio"
                                 type="number"
